@@ -1,0 +1,60 @@
+version: '3.2'
+services:
+  # PHP Service
+  app:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    container_name: app
+    ports:
+      - "${APP_PORT}:9000"
+    # restart: unless-stopped
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www/freelance
+    volumes:
+      - ./.env:/var/www/freelance/.env
+      - ./app:/var/www/freelance
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    links:
+      - pgsql
+    depends_on:
+      - pgsql
+
+  # Nginx Service
+  webserver:
+    env_file:
+      - ./.env
+    image: nginx:${NGINX_VERSION}
+    container_name: webserver
+    #restart: unless-stopped
+    ports:
+      - "${WEB_PORT}:80"
+    volumes:
+      - ./.env:/var/www/freelance/.env
+      - ./app:/var/www/freelance
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    links:
+      - app
+    depends_on:
+      - app
+
+  # PostgreSQL Service
+  pgsql:
+    env_file:
+      - ./.env
+    image: postgres:${PGSQL_VERSION}
+    container_name: pgsql
+    ports:
+        - "${PGSQL_PORT}:5432"
+    environment:
+        PGPASSWORD: ${DB_PASSWORD}
+        POSTGRES_DB: ${DB_NAME}
+        POSTGRES_USER: ${DB_USER}
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+        - ./pgsql:/var/lib/postgresql/data
+    restart: unless-stopped
