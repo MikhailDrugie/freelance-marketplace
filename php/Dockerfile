@@ -1,6 +1,6 @@
 FROM php:8.1-fpm
 
-RUN apt-get update && apt-get install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip libpq-dev
+RUN apt-get update && apt-get install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip libpq-dev yarn npm
 
 RUN docker-php-ext-install intl opcache pdo pdo_mysql pdo_pgsql \
     && pecl install apcu \

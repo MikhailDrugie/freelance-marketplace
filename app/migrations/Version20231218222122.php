@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231217024102 extends AbstractMigration
+final class Version20231218222122 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -37,7 +37,9 @@ final class Version20231217024102 extends AbstractMigration
         $this->addSql('CREATE TABLE public.resumes (id SERIAL NOT NULL, freelancer_id INT NOT NULL, title VARCHAR(255) NOT NULL, price DOUBLE PRECISION NOT NULL, experience INT NOT NULL, tags JSON NOT NULL, description TEXT DEFAULT NULL, contact_form JSON NOT NULL, status INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_F69C638F8545BDF5 ON public.resumes (freelancer_id)');
         $this->addSql('CREATE TABLE public.user_groups (id SERIAL NOT NULL, label VARCHAR(64) NOT NULL, level INT NOT NULL, description VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE public.users (id SERIAL NOT NULL, user_group_id INT NOT NULL, login VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, full_name VARCHAR(255) DEFAULT NULL, status INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE public.users (id SERIAL NOT NULL, user_group_id INT DEFAULT 1 NOT NULL, login VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, full_name VARCHAR(255) DEFAULT NULL, status INT DEFAULT 1 NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_2552C48DAA08CB10 ON public.users (login)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_2552C48DE7927C74 ON public.users (email)');
         $this->addSql('CREATE INDEX IDX_2552C48D1ED93D47 ON public.users (user_group_id)');
         $this->addSql('ALTER TABLE public.employers ADD CONSTRAINT FK_8BAD72B1A76ED395 FOREIGN KEY (user_id) REFERENCES public.users (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE public.freelancers ADD CONSTRAINT FK_39E5C97AA76ED395 FOREIGN KEY (user_id) REFERENCES public.users (id) NOT DEFERRABLE INITIALLY IMMEDIATE');

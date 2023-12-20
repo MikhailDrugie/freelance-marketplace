@@ -2,52 +2,73 @@
 
 namespace App\Entity;
 
+use App\Repository\UserGroupRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[HasLifecycleCallbacks]
 #[ORM\Table(name: 'users', schema: 'public')]
-class User
+#[UniqueEntity(fields: ['login'], message: 'There is already an account with this login')]
+class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    const STATUS_ACTIVE = 1;
+    const STATUS_DELETED = 2;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $login = null;
+    #[ORM\Column(length: 255, unique: true)]
+    private string $login;
 
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
+    #[ORM\Column(length: 255, unique: true)]
+    private string $email;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $full_name = null;
 
+    #[ORM\Column(name: 'status')]
+    private int $status = self::STATUS_ACTIVE;
+
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $created_at;
+
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $updated_at;
+
+    /**
+     * @var string $password The hashed password
+     */
     #[ORM\Column]
-    private ?int $status = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeInterface $created_at = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Gedmo\Timestampable(on: 'update')]
-    private ?\DateTimeInterface $updated_at = null;
-
-    #[ORM\Column]
-    private ?int $user_group_id = null;
+    private string $password;
 
     #[ORM\ManyToOne(targetEntity: UserGroup::class)]
-    #[ORM\JoinColumn(name: 'user_group_id', referencedColumnName: 'id')]
-    private ?UserGroup $userGroup = null;
+    private UserGroup $userGroup;
 
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Freelancer::class)]
     private ?Freelancer $freelancer = null;
 
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Employer::class)]
     private ?Employer $employer = null;
+
+    protected UserGroupRepository $userGroupRepository;
+
+    public function __construct(EntityManagerInterface $entityManager) {
+        parent::__construct($entityManager);
+        /** @var $repository UserGroupRepository */
+        $repository = $entityManager->getRepository(UserGroup::class);
+        $this->userGroupRepository = $repository;
+    }
 
     public function getId(): ?int
     {
@@ -66,6 +87,16 @@ class User
         return $this;
     }
 
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->login;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -74,6 +105,21 @@ class User
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
 
         return $this;
     }
@@ -102,16 +148,17 @@ class User
         return $this;
     }
 
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(): void
     {
-        $this->created_at = $created_at;
-
-        return $this;
+        $this->created_at = new DateTime();
+        $this->setUpdatedAt();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -119,28 +166,27 @@ class User
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updated_at): static
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): void
     {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getUserGroupId(): ?int
-    {
-        return $this->user_group_id;
-    }
-
-    public function setUserGroupId(int $user_group_id): static
-    {
-        $this->user_group_id = $user_group_id;
-
-        return $this;
+        $this->updated_at = new DateTime();
     }
 
     public function getUserGroup(): ?UserGroup
     {
         return $this->userGroup;
+    }
+
+    public function setUserGroup(UserGroup $userGroup): static
+    {
+        $this->userGroup = $userGroup;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setDefaultUserGroup(): void
+    {
+        $this->userGroup = $this->userGroupRepository->getDefaultUserGroup();
     }
 
     public function getFreelancer(): ?Freelancer
@@ -151,5 +197,29 @@ class User
     public function getEmployer(): ?Employer
     {
         return $this->employer;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getRoles(): array
+    {
+        $userGroup = $this->userGroup;
+        return match ($userGroup->getLevel()) {
+            UserGroup::LEVEL_USER => ['ROLE_USER'],
+            UserGroup::LEVEL_ADMIN => ['ROLE_USER', 'ROLE_ADMIN'],
+            default => [],
+        };
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
     }
 }

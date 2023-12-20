@@ -19,6 +19,32 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Controller/'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: [ 'controller.service_arguments' ]
+
+    App\Entity\:
+        resource: '../src/Entity/'
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+
+    App\Service\:
+        resource: '../src/Service/'
+
+    App\Service\UserService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $entity: '@App\Entity\User'
+
+    App\Controller\SiteController:
+        arguments:
+            $viewDir: 'site'
+
+    App\Controller\UserController:
+        arguments:
+            $service: '@App\Service\UserService'
+            $viewDir: 'user'

@@ -9,8 +9,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserGroupRepository::class)]
 #[ORM\Table(name: 'user_groups', schema: 'public')]
-class UserGroup
+class UserGroup extends BaseEntity
 {
+    const LEVEL_USER = 1;
+    const LEVEL_ADMIN = 777;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     #[ORM\Column]

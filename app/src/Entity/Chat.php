@@ -12,7 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'linked_to', type: 'string')]
 #[ORM\DiscriminatorMap([Chat::LINKED_TO_PROJECT => ProjectChat::class, Chat::LINKED_TO_RESUME => ResumeChat::class])]
-class Chat
+class Chat extends BaseEntity
 {
     const LINKED_TO_PROJECT = 'project';
     const LINKED_TO_RESUME = 'resume';

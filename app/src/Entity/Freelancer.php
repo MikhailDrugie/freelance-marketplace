@@ -9,7 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: FreelancerRepository::class)]
 #[ORM\Table(name: 'freelancers', schema: 'public')]
-class Freelancer
+class Freelancer extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
@@ -118,6 +118,12 @@ class Freelancer
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    public function setUser(User $user): static
+    {
+        $this->user = $user;
+        return $this;
     }
 
     public function getResumes(): ?array

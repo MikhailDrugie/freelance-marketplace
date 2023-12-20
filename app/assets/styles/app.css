@@ -1,0 +1,6 @@
+@import "~bootstrap/dist/css/bootstrap-reboot";
+@import "~bootstrap/dist/css/bootstrap";
+
+body {
+    background-color: #93c4aa;
+}

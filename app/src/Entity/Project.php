@@ -9,7 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ORM\Table(name: 'projects', schema: 'public')]
-class Project
+class Project extends BaseEntity
 {
     const EXP_NOT_MATTER = null;
     const EXP_NONE = 1;

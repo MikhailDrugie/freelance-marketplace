@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ConfigRepository::class)]
 #[ORM\Table(name: 'config', schema: 'public')]
-class Config
+class Config extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]

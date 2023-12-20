@@ -9,7 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: EmployerRepository::class)]
 #[ORM\Table(name: 'employers', schema: 'public')]
-class Employer
+class Employer extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
