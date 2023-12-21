@@ -7,14 +7,18 @@
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
-
+        {% block custom_css %}{% endblock %}
         {% block javascripts %}
+{#            {{ encore_entry_script_tags('jquery') }}#}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
     <body>
-        <div class="col-lg-2">
-            {% block body %}{% endblock %}
+        <div class="container">
+            <div class="justify-content-center">
+                {% block body %}{% endblock %}
+            </div>
         </div>
+        {% block custom_js %}{% endblock %}
     </body>
 </html>

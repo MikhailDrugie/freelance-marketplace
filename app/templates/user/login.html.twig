@@ -1,33 +1,25 @@
-{% extends 'base.html.twig' %}
+{% extends 'user/auth_form.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Авторизация{% endblock %}
+{% block action %}Авторизация{% endblock %}
 
-{% block body %}
-<form method="post">
+{% block error %}
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
+{% endblock %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
-
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputLogin">Login</label>
+{% block form %}
+    <label for="inputLogin">Логин</label>
     <input type="text" value="{{ last_username }}" name="login" id="inputLogin" class="form-control" autocomplete="username" required autofocus>
-    <label for="inputPassword">Password</label>
+
+    <label for="inputPassword">Пароль</label>
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <label for="inputRememberMe">Remember Me</label>
-    <input type="checkbox" name="rememberMe" id="inputRememberMe" class="form-control">
+    <label for="inputRememberMe">Запомнить меня</label>
+    <input type="checkbox" name="rememberMe" id="inputRememberMe" class="form-check form-check-input">
 
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
     >
-
-    <button class="btn btn-lg btn-success" type="submit">
-        Sign in
-    </button>
-</form>
 {% endblock %}
+{% block action_btn %}Войти{% endblock %}

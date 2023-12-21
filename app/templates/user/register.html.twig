@@ -1,20 +1,22 @@
-{% extends 'base.html.twig' %}
+{% extends 'user/auth_form.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Регистрация{% endblock %}
+{% block action %}Регистрация{% endblock %}
 
-{% block body %}
-    <h1>Register</h1>
+{% block error %}{{ form_errors(registrationForm) }}{% endblock %}
 
-    {{ form_errors(registrationForm) }}
-
+{% block form %}
     {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.login) }}
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
+            label: 'Пароль'
+        }) }}
+        {{ form_row(registrationForm.fullName, {
+            label: 'Ваше имя'
         }) }}
         {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn btn-success">Register</button>
     {{ form_end(registrationForm) }}
 {% endblock %}
+
+{% block action_btn %}Зарегистрироваться{% endblock %}

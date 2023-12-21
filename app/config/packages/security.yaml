@@ -16,14 +16,14 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\LoginAuthenticatorAuthenticator
+            custom_authenticator: App\Security\LoginAuthenticator
             form_login:
-                login_path: user-login
-                check_path: user-login
+                login_path: login
+                check_path: login
                 enable_csrf: true
             logout:
-                path: user-logout
-                target: site-index
+                path: logout
+                target: index
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800

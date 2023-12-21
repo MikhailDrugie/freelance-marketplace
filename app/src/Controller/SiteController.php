@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SiteController extends BaseController
 {
-    #[Route('/', name: "site-index")]
+    #[Route('/', name: "index")]
     public function index(): Response
     {
         return $this->render("index");

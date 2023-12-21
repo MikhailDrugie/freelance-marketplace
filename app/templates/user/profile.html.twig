@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ваш профиль{% endblock %}
+
+{% block body %}
+    <h1>Привет, {{ user.fullName ?? user.login }}</h1>
+
+    <div class="row">
+        {% if user.freelancer %}
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <div class="mb-3">
+                            <a href="{{ path('profile') }}" class="btn btn-lg btn-success btn-block">Мои резюме</a>
+                        </div>
+                        <div class="mb-3">
+                            <a href="{{ path('profile') }}" class="btn btn-lg btn-success btn-block">Посмотреть доступные фриланс-проекты</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if user.employer %}
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <div class="mb-3">
+                            <a href="{{ path('profile') }}" class="btn btn-lg btn-success btn-block">Мои проекты</a>
+                        </div>
+                        <div class="mb-3">
+                            <a href="{{ path('profile') }}" class="btn btn-lg btn-success btn-block">Посмотреть резюме фрилансеров</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="row-cols-2 mb-2">
+                <a href="{{ path('settings') }}" class="btn btn-secondary btn-block">Настройки</a>
+            </div>
+            <div class="row-cols-3 mb-2">
+                <a href="{{ path('logout') }}" class="btn btn-danger btn-block">Выйти</a>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            {% if not user.freelancer %}
+                <div class="row-cols-2 mb-2">
+                    <a href="{{ path('profile') }}" class="btn btn-success btn-block">Создать профиль фрилансера</a>
+                </div>
+            {% elseif (user.freelancer.status == 2) %}
+                <div class="row-cols-2 mb-2">
+                    <a href="{{ path('profile') }}" class="btn btn-warning btn-block">Восстановить профиль фрилансера</a>
+                </div>
+            {% endif %}
+
+            {% if not user.employer %}
+                <div class="row-cols-2 mb-2">
+                    <a href="{{ path('profile') }}" class="btn btn-success btn-block">Создать профиль заказчика</a>
+                </div>
+            {% elseif (user.freelancer.status == 2) %}
+                <div class="row-cols-2 mb-2">
+                    <a href="{{ path('profile') }}" class="btn btn-warning btn-block">Восстановить профиль заказчика</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
