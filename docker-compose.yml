@@ -37,6 +37,7 @@ services:
       - ./.env:/var/www/freelance/.env
       - ./app:/var/www/freelance
       - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/logs/:/var/log/nginx/
     links:
       - app
     depends_on:

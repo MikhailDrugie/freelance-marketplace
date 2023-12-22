@@ -211,6 +211,8 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     public function getRoles(): array
     {
         $userGroup = $this->userGroup;
+        $isFreelancer = $this->freelancer && $this->freelancer->isActive();
+        $isEmployer = $this->employer && $this->employer->isActive();
         return match ($userGroup->getLevel()) {
             UserGroup::LEVEL_USER => ['ROLE_USER'],
             UserGroup::LEVEL_ADMIN => ['ROLE_USER', 'ROLE_ADMIN'],

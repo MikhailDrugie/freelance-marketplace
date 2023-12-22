@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\ConfigRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ConfigRepository::class)]
 #[ORM\Table(name: 'config', schema: 'public')]
+#[HasLifecycleCallbacks]
 class Config extends BaseEntity
 {
     #[ORM\Id]
@@ -64,11 +67,11 @@ class Config extends BaseEntity
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(): void
     {
-        $this->created_at = $createdAt;
-
-        return $this;
+        $this->created_at = new DateTime();
+        $this->setUpdatedAt();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -76,10 +79,9 @@ class Config extends BaseEntity
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): void
     {
-        $this->updated_at = $updatedAt;
-
-        return $this;
+        $this->updated_at = new DateTime();
     }
 }

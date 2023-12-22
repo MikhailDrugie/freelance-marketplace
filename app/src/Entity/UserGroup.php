@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\UserGroupRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserGroupRepository::class)]
 #[ORM\Table(name: 'user_groups', schema: 'public')]
+#[HasLifecycleCallbacks]
 class UserGroup extends BaseEntity
 {
     const LEVEL_USER = 1;
@@ -82,11 +85,11 @@ class UserGroup extends BaseEntity
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(): void
     {
-        $this->created_at = $created_at;
-
-        return $this;
+        $this->created_at = new DateTime();
+        $this->setUpdatedAt();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -94,10 +97,9 @@ class UserGroup extends BaseEntity
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updated_at): static
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): void
     {
-        $this->updated_at = $updated_at;
-
-        return $this;
+        $this->updated_at = new DateTime();
     }
 }

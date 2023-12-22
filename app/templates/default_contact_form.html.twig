@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <form method="post">
+        {{ form_errors(contactFormForm) }}
+        <div class="row d-flex flex-column align-items-center">
+            <div class="col-lg-5">
+                <h1 class="h3 mb-3 font-weight-normal">Контактная форма по умолчанию (необязательно)</h1>
+            </div>
+            <div class="col-lg-5">
+                {{ form_start(contactFormForm) }}
+                {{ form_row(contactFormForm.email, {
+                    label: 'Почта'
+                }) }}
+                {{ form_row(contactFormForm.phone, {
+                    label: 'Телефон'
+                }) }}
+                {{ form_row(contactFormForm.telegram, {
+                    label: 'Telegram'
+                }) }}
+                {{ form_end(contactFormForm) }}
+            </div>
+            <br>
+            <div class="col-lg-5">
+                <button class="btn btn-lg btn-success" type="submit">
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

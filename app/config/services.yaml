@@ -6,45 +6,112 @@
 parameters:
 
 services:
-    # default configuration for services in *this* file
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
-            - '../src/Controller/'
+  # makes classes in src/ available to be used as services
+  # this creates a service per class whose id is the fully-qualified class name
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Entity/'
+      - '../src/Kernel.php'
+      - '../src/Controller/'
 
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller/'
-        tags: [ 'controller.service_arguments' ]
+  # controllers are imported separately to make sure services can be injected
+  # as action arguments even if you don't extend any base controller class
+  App\Controller\:
+    resource: '../src/Controller/'
+    tags: [ 'controller.service_arguments' ]
 
-    App\Entity\:
-        resource: '../src/Entity/'
-        arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
+  ####[ENTITIES]######################################################################
+  App\Entity\:
+    resource: '../src/Entity/'
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+  #####################################################################################
 
-    App\Service\:
-        resource: '../src/Service/'
+  ####[SERVICES]######################################################################
+  App\Service\:
+    resource: '../src/Service/'
 
-    App\Service\UserService:
-        arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
-            $entity: '@App\Entity\User'
+  App\Service\UserService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $entity: '@App\Entity\User'
 
-    App\Controller\SiteController:
-        arguments:
-            $viewDir: 'site'
+  App\Service\FreelancerService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $entity: '@App\Entity\Freelancer'
 
-    App\Controller\UserController:
-        arguments:
-            $service: '@App\Service\UserService'
-            $viewDir: 'user'
+  App\Service\EmployerService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $entity: '@App\Entity\Employer'
+
+  App\Service\ResumeService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $entity: '@App\Entity\Resume'
+
+  App\Service\ProjectService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $entity: '@App\Entity\Project'
+
+  # this service uses different repositories
+  App\Service\MarketService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $entity: '@App\Entity\Resume'
+
+  App\Service\ChatService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $entity: '@App\Entity\Chat'
+  #####################################################################################
+
+  ####[CONTROLLERS]######################################################################
+  App\Controller\SiteController:
+    arguments:
+      $viewDir: 'site'
+
+  App\Controller\UserController:
+    arguments:
+      $service: '@App\Service\UserService'
+      $viewDir: 'user'
+
+  App\Controller\FreelancerController:
+    arguments:
+      $service: '@App\Service\FreelancerService'
+      $viewDir: 'freelancer'
+
+  App\Controller\EmployerController:
+    arguments:
+      $service: '@App\Service\EmployerService'
+      $viewDir: 'employer'
+
+  App\Controller\ResumeController:
+    arguments:
+      $service: '@App\Service\ResumeService'
+      $viewDir: 'resume'
+
+  App\Controller\ProjectController:
+    arguments:
+      $service: '@App\Service\ProjectService'
+      $viewDir: 'project'
+
+  App\Controller\MarketController:
+    arguments:
+      $service: '@App\Service\MarketService'
+      $viewDir: 'market'
+
+  App\Controller\ChatController:
+    arguments:
+      $service: '@App\Service\ChatService'
+      $viewDir: 'chat'
+  #####################################################################################

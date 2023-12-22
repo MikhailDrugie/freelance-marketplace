@@ -3,12 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ORM\Table(name: 'projects', schema: 'public')]
+#[HasLifecycleCallbacks]
 class Project extends BaseEntity
 {
     const EXP_NOT_MATTER = null;
@@ -59,9 +63,9 @@ class Project extends BaseEntity
     #[ORM\JoinColumn(name: 'employer_id', referencedColumnName: 'id')]
     private ?Employer $author = null;
 
-    /** @var ?array<Chat> $chats */
+    /** @var ?Collection<Chat> $chats */
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Chat::class)]
-    private ?array $chats = null;
+    private ?Collection $chats = null;
 
     public function getId(): ?int
     {
@@ -169,11 +173,11 @@ class Project extends BaseEntity
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(): void
     {
-        $this->created_at = $created_at;
-
-        return $this;
+        $this->created_at = new DateTime();
+        $this->setUpdatedAt();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -181,11 +185,10 @@ class Project extends BaseEntity
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updated_at): static
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): void
     {
-        $this->updated_at = $updated_at;
-
-        return $this;
+        $this->updated_at = new DateTime();
     }
 
     public function getAuthor(): ?Employer

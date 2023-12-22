@@ -3,14 +3,21 @@
 namespace App\Entity;
 
 use App\Repository\FreelancerRepository;
+use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: FreelancerRepository::class)]
 #[ORM\Table(name: 'freelancers', schema: 'public')]
+#[HasLifecycleCallbacks]
 class Freelancer extends BaseEntity
 {
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 2;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     #[ORM\Column]
@@ -37,18 +44,17 @@ class Freelancer extends BaseEntity
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private ?User $user = null;
 
-    /* @var array<Resume>|null $resumes */
+    /* @var Collection<Resume>|null $resumes */
     #[ORM\OneToMany(mappedBy: 'freelancer', targetEntity: Resume::class)]
-    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'freelancer_id')]
-    private ?array $resumes = [];
+    private ?Collection $resumes = null;
 
-    /** @var array<FreelancerFeedback> $receivedFeedbacks */
+    /** @var Collection<FreelancerFeedback>|null $receivedFeedbacks */
     #[ORM\OneToMany(mappedBy: 'recipient', targetEntity: FreelancerFeedback::class)]
-    private ?array $receivedFeedbacks = null;
+    private ?Collection $receivedFeedbacks = null;
 
-    /** @var array<EmployerFeedback> $postedFeedbacks */
+    /** @var Collection<EmployerFeedback>|null $postedFeedbacks */
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: EmployerFeedback::class)]
-    private ?array $postedFeedbacks = null;
+    private ?Collection $postedFeedbacks = null;
 
     public function getId(): ?int
     {
@@ -96,11 +102,11 @@ class Freelancer extends BaseEntity
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(): void
     {
-        $this->created_at = $created_at;
-
-        return $this;
+        $this->created_at = new DateTime();
+        $this->setUpdatedAt();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -108,11 +114,10 @@ class Freelancer extends BaseEntity
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updated_at): static
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): void
     {
-        $this->updated_at = $updated_at;
-
-        return $this;
+        $this->updated_at = new DateTime();
     }
 
     public function getUser(): ?User
@@ -139,5 +144,15 @@ class Freelancer extends BaseEntity
     public function getPostedFeedbacks(): ?array
     {
         return $this->postedFeedbacks;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status == self::STATUS_ACTIVE;
+    }
+
+    public function isInactive(): bool
+    {
+        return $this->status == self::STATUS_INACTIVE;
     }
 }

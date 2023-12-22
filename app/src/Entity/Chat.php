@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ChatRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ChatRepository::class)]
@@ -12,6 +14,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'linked_to', type: 'string')]
 #[ORM\DiscriminatorMap([Chat::LINKED_TO_PROJECT => ProjectChat::class, Chat::LINKED_TO_RESUME => ResumeChat::class])]
+#[HasLifecycleCallbacks]
 class Chat extends BaseEntity
 {
     const LINKED_TO_PROJECT = 'project';
@@ -134,11 +137,11 @@ class Chat extends BaseEntity
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(): void
     {
-        $this->created_at = $created_at;
-
-        return $this;
+        $this->created_at = new DateTime();
+        $this->setUpdatedAt();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -146,11 +149,10 @@ class Chat extends BaseEntity
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updated_at): static
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): void
     {
-        $this->updated_at = $updated_at;
-
-        return $this;
+        $this->updated_at = new DateTime();
     }
 
     public function getMessages(): ?array
