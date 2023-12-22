@@ -99,19 +99,23 @@ services:
     arguments:
       $service: '@App\Service\ResumeService'
       $viewDir: 'resume'
+      $paginationService: '@App\Service\PaginationService'
 
   App\Controller\ProjectController:
     arguments:
       $service: '@App\Service\ProjectService'
       $viewDir: 'project'
+      $paginationService: '@App\Service\PaginationService'
 
   App\Controller\MarketController:
     arguments:
       $service: '@App\Service\MarketService'
       $viewDir: 'market'
+      $paginationService: '@App\Service\PaginationService'
 
   App\Controller\ChatController:
     arguments:
       $service: '@App\Service\ChatService'
       $viewDir: 'chat'
+      $paginationService: '@App\Service\PaginationService'
   #####################################################################################

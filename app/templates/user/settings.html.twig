@@ -38,9 +38,6 @@
 
 {% block custom_js %}
     <script>
-        $(document).ready(function () {
-            console.log('test');
-        });
         $('.account-delete').on('click', function (e) {
             e.preventDefault();
             let userId = $(this).data('user-id');

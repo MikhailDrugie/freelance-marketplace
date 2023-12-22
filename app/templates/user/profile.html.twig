@@ -11,7 +11,7 @@
                 <div class="card">
                     <div class="card-body d-flex flex-column align-items-center">
                         <div class="mb-3">
-                            <a href="{{ path('profile') }}" class="btn btn-lg btn-success btn-block">Мои резюме</a>
+                            <a href="{{ path('resume-list') }}" class="btn btn-lg btn-success btn-block">Мои резюме</a>
                         </div>
                         <div class="mb-3">
                             <a href="{{ path('profile') }}" class="btn btn-lg btn-success btn-block">Посмотреть доступные фриланс-проекты</a>
@@ -59,11 +59,11 @@
 
             {% if not user.employer %}
                 <div class="row-cols-2 mb-2">
-                    <a href="{{ path('profile') }}" class="btn btn-success btn-block">Создать профиль заказчика</a>
+                    <a href="{{ path('activate-employ') }}" class="btn btn-success btn-block">Создать профиль заказчика</a>
                 </div>
-            {% elseif user.freelancer.isInactive %}
+            {% elseif user.employer.isInactive %}
                 <div class="row-cols-2 mb-2">
-                    <a href="{{ path('profile') }}" class="btn btn-warning btn-block">Восстановить профиль заказчика</a>
+                    <a href="{{ path('activate-employ') }}" class="btn btn-warning btn-block">Восстановить профиль заказчика</a>
                 </div>
             {% endif %}
         </div>

@@ -45,7 +45,7 @@ class Freelancer extends BaseEntity
     private ?User $user = null;
 
     /* @var Collection<Resume>|null $resumes */
-    #[ORM\OneToMany(mappedBy: 'freelancer', targetEntity: Resume::class)]
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Resume::class)]
     private ?Collection $resumes = null;
 
     /** @var Collection<FreelancerFeedback>|null $receivedFeedbacks */
@@ -131,17 +131,17 @@ class Freelancer extends BaseEntity
         return $this;
     }
 
-    public function getResumes(): ?array
+    public function getResumes(): ?Collection
     {
         return $this->resumes;
     }
 
-    public function getReceivedFeedbacks(): ?array
+    public function getReceivedFeedbacks(): ?Collection
     {
         return $this->receivedFeedbacks;
     }
 
-    public function getPostedFeedbacks(): ?array
+    public function getPostedFeedbacks(): ?Collection
     {
         return $this->postedFeedbacks;
     }

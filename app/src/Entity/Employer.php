@@ -24,9 +24,6 @@ class Employer extends BaseEntity
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $user_id = null;
-
-    #[ORM\Column]
     private ?int $status = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true, options: ['default' => '{}'])]
@@ -60,18 +57,6 @@ class Employer extends BaseEntity
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): static
-    {
-        $this->user_id = $user_id;
-
-        return $this;
     }
 
     public function getStatus(): ?int
@@ -124,6 +109,12 @@ class Employer extends BaseEntity
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    public function setUser(User $user): static
+    {
+        $this->user = $user;
+        return $this;
     }
 
     public function getProjects(): ?Collection

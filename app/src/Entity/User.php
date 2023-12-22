@@ -63,7 +63,8 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
 
     protected UserGroupRepository $userGroupRepository;
 
-    public function __construct(EntityManagerInterface $entityManager) {
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         parent::__construct($entityManager);
         /** @var $repository UserGroupRepository */
         $repository = $entityManager->getRepository(UserGroup::class);
@@ -94,7 +95,7 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->login;
+        return (string)$this->login;
     }
 
     public function getEmail(): ?string
@@ -213,11 +214,14 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
         $userGroup = $this->userGroup;
         $isFreelancer = $this->freelancer && $this->freelancer->isActive();
         $isEmployer = $this->employer && $this->employer->isActive();
-        return match ($userGroup->getLevel()) {
+        $roles = match ($userGroup->getLevel()) {
             UserGroup::LEVEL_USER => ['ROLE_USER'],
             UserGroup::LEVEL_ADMIN => ['ROLE_USER', 'ROLE_ADMIN'],
             default => [],
         };
+        $roles += $isFreelancer ? ['ROLE_FREELANCER'] : [];
+        $roles += $isEmployer ? ['ROLE_EMPLOYER'] : [];
+        return $roles;
     }
 
     public function getSalt(): ?string

@@ -1,0 +1,36 @@
+<div class="table-responsive">
+    <table class="table card-table table-vcenter">
+        <tbody>
+        <tr>
+            {% block columns %}
+                <td></td>
+                <td><b>#</b></td>
+                <td><b>Название</b></td>
+                <td><b>Статус</b></td>
+                <td><b>Опыт</b></td>
+                <td><b>Теги</b></td>
+                <td><b>Время создания</b></td>
+            {% endblock %}
+        </tr>
+        {% for item in pagination.Items %}
+            {{ include(entityView, {entity: item}) }}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    <div class="col-6 text-lg-end">
+        {% if pagination.CurrentPageNumber > 1 %}
+            <a href="{% block route_prev %}/{% endblock %}" class="btn btn-secondary btn-outline-success">
+                <b><<</b>
+            </a>
+        {% endif %}
+    </div>
+    <div class="col-6">
+        {% if pagination.CurrentPageNumber < (pagination.TotalItemCount / pagination.ItemNumberPerPage) %}
+            <a href="{% block route_next %}/{% endblock %}" class="btn btn-secondary btn-outline-success">
+                <b>>></b>
+            </a>
+        {% endif %}
+    </div>
+</div>

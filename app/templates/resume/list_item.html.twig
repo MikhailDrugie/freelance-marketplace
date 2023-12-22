@@ -1,0 +1,10 @@
+<tr id="tr_{{ entity.Id }}">
+    <td></td>
+    <td>{{ entity.Id }}</td>
+    <td>{{ entity.Title }}</td>
+    <td>{{ entity.StatusText }}</td>
+    <td>{{ entity.ExperienceText }}</td>
+    <td>{{ entity.TagsText }}</td>
+    <td>{{ entity.CreatedAt.format('d.m.Y H:i:s') }}</td>
+    <td><a href="{{ path('resume-edit', {id: entity.Id}) }}">Ред.</a></td>
+</tr>

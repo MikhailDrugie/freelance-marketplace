@@ -21,6 +21,17 @@ class Resume extends BaseEntity
     const EXP_ONE_TO_THREE = 3;
     const EXP_THREE_TO_FIVE = 4;
     const EXP_SIX_AND_MORE = 5;
+    const EXP_MAP = [
+        'Не указано' => self::EXP_NOT_MATTER,
+        'Без опыта' => self::EXP_NONE,
+        'Меньше года' => self::EXP_LESS_THAN_ONE,
+        'От 1 до 3 лет' => self::EXP_ONE_TO_THREE,
+        'От 3 до 5 лет' => self::EXP_THREE_TO_FIVE,
+        'От 6 лет' => self::EXP_SIX_AND_MORE
+    ];
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 2;
 
 
     #[ORM\Id]
@@ -73,17 +84,7 @@ class Resume extends BaseEntity
         return $this->id;
     }
 
-    public function getFreelancerId(): ?int
-    {
-        return $this->freelancer_id;
-    }
-
-    public function setFreelancerId(int $freelancer_id): static
-    {
-        $this->freelancer_id = $freelancer_id;
-
-        return $this;
-    }
+    private ?string $tagsText = null;
 
     public function getTitle(): ?string
     {
@@ -114,6 +115,19 @@ class Resume extends BaseEntity
         return $this->experience;
     }
 
+    public function getExperienceText(): string
+    {
+        return match ($this->experience) {
+            self::EXP_NONE => 'Без опыта',
+            self::EXP_LESS_THAN_ONE => 'Меньше года',
+            self::EXP_ONE_TO_THREE => 'От 1 до 3 лет',
+            self::EXP_THREE_TO_FIVE => 'От 3 до 5 лет',
+            self::EXP_SIX_AND_MORE => 'От 6 лет',
+            self::EXP_NOT_MATTER => 'Не указано',
+            default => 'Неизвестно'
+        };
+    }
+
     public function setExperience(int $experience): static
     {
         $this->experience = $experience;
@@ -124,6 +138,17 @@ class Resume extends BaseEntity
     public function getTags(): array
     {
         return $this->tags;
+    }
+
+    public function getTagsText(): string
+    {
+        return implode(', ', $this->tags);
+    }
+
+    public function setTagsText(string $text): static
+    {
+        $this->tags = explode(',', $text);
+        return $this;
     }
 
     public function setTags(array $tags): static
@@ -162,6 +187,15 @@ class Resume extends BaseEntity
         return $this->status;
     }
 
+    public function getStatusText(): string
+    {
+        return match ($this->status) {
+            self::STATUS_ACTIVE => 'Показывается',
+            self::STATUS_INACTIVE => 'Не показывается',
+            default => 'Неизвестно',
+        };
+    }
+
     public function setStatus(int $status): static
     {
         $this->status = $status;
@@ -197,8 +231,24 @@ class Resume extends BaseEntity
         return $this->author;
     }
 
-    public function getChats(): ?array
+    public function setAuthor(Freelancer $author): static
+    {
+        $this->author = $author;
+        return $this;
+    }
+
+    public function getChats(): ?Collection
     {
         return $this->chats;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status == self::STATUS_ACTIVE;
+    }
+
+    public function isInactive(): bool
+    {
+        return $this->status == self::STATUS_INACTIVE;
     }
 }

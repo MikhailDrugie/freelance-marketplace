@@ -106,7 +106,7 @@ class UserController extends BaseController
         ]);
     }
 
-    #[Route('/profile/ajax/delete-user', name: 'delete-user')]
+    #[Route('/ajax/delete-user', name: 'delete-user')]
     public function deleteUser(Request $request): Response
     {
         throw new AccessDeniedException('WIP');

@@ -39,6 +39,8 @@ security:
 #        - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/market, roles: ROLE_USER }
+        - { path: ^/profile/resume, roles: ROLE_FREELANCER }
+        - { path: ^/profile/project, roles: ROLE_EMPLOYER }
 
 when@test:
     security:

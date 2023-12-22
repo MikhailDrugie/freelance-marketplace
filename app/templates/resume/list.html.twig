@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ваши резюме{% endblock %}
+
+{% block body %}
+    <h1>Ваши резюме</h1>
+    <div class="card">
+        <form method="GET">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <label class="w-100"><b>Название</b>
+                            <input name="title" value="{{ title }}" class="form-control w-100">
+                        </label>
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="w-100"><b>Статус</b>
+                            <select name="status" class="form-control w-100">
+                                <option value="">Не выбрано</option>
+                                <option value="{{ status_active }}" {{ status == status_active ? 'selected' : '' }}>
+                                    Активно
+                                </option>
+                                <option value="{{ status_inactive }}" {{ status == status_inactive ? 'selected' : '' }}>
+                                    Не показывается
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-lg-3 text-lg-end">
+                        <button class="btn btn-success w-75" style="margin-top: 7.5%" type="submit">Поиск</button>
+                        <a class="btn btn-secondary w-75" href="{{ path('resume-create') }}">Создать новое</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="card-body">
+            {{ include('resume/pagination.html.twig', {
+                pagination: pagination,
+                route: 'resume-list',
+                entityView: 'resume/list_item.html.twig',
+                title: title, status: status }) }}
+        </div>
+    </div>
+{% endblock %}

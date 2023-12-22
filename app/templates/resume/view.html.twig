@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ entity.Title ?? 'Новое резюме'}}{% endblock %}
+
+{% block body %}
+    <form method="post">
+        {{ form_errors(resumeForm) }}
+        <div class="row d-flex flex-column align-items-center">
+            <div class="col-lg-5">
+                <h1 class="h3 mb-3 font-weight-normal">{{ entity.Title ?? 'Новое резюме' }}</h1>
+            </div>
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                        {{ form_start(resumeForm) }}
+                        {{ form_row(resumeForm.title, {
+                            label: 'Название'
+                        }) }}
+                        {{ form_row(resumeForm.price, {
+                            label: 'Цена'
+                        }) }}
+                        {{ form_row(resumeForm.experience, {
+                            label: 'Опыт'
+                        }) }}
+                        {{ form_row(resumeForm.tagsText, {
+                            label: 'Тэги'
+                        }) }}
+                        {{ form_row(resumeForm.description, {
+                            label: 'Описание'
+                        }) }}
+                        {{ form_row(resumeForm.status, {
+                            label: 'Статус'
+                        }) }}
+                        <div class="form-group border-dark">
+                            <label><b>Контактная форма</b> (оставьте пустой для выбора значений по умолчанию из профиля)</label>
+                            {{ form_row(resumeForm.email, {
+                                label: 'Почта'
+                            }) }}
+                            {{ form_row(resumeForm.phone, {
+                                label: 'Телефон'
+                            }) }}
+                            {{ form_row(resumeForm.telegram, {
+                                label: 'Телеграм'
+                            }) }}
+                        </div>
+                        {{ form_end(resumeForm) }}
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-lg-5">
+                <button class="btn btn-lg btn-success" type="submit">
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
