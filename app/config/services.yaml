@@ -34,6 +34,15 @@ services:
       $entityManager: '@doctrine.orm.entity_manager'
   #####################################################################################
 
+  ####[COMMANDS]######################################################################
+  App\Command\:
+    resource: '../src/Command/'
+    tags:
+      - { name: 'console.command' }
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+  #####################################################################################
+
   ####[SERVICES]######################################################################
   App\Service\:
     resource: '../src/Service/'
@@ -73,6 +82,16 @@ services:
     arguments:
       $entityManager: '@doctrine.orm.entity_manager'
       $entity: '@App\Entity\Chat'
+
+  App\Service\AdminService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $entity: '@App\Entity\User'
+
+  App\Service\ApiService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $entity: '@App\Entity\User'
   #####################################################################################
 
   ####[CONTROLLERS]######################################################################
@@ -117,5 +136,17 @@ services:
     arguments:
       $service: '@App\Service\ChatService'
       $viewDir: 'chat'
+      $paginationService: '@App\Service\PaginationService'
+
+  App\Controller\AdminController:
+    arguments:
+      $service: '@App\Service\AdminService'
+      $viewDir: 'admin'
+      $paginationService: '@App\Service\PaginationService'
+
+  App\Controller\ApiController:
+    arguments:
+      $service: '@App\Service\ApiService'
+      $viewDir: 'api'
       $paginationService: '@App\Service\PaginationService'
   #####################################################################################

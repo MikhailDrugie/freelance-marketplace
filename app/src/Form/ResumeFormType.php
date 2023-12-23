@@ -34,7 +34,7 @@ class ResumeFormType extends AbstractType
                 ]
             ])
             ->add('experience', ChoiceType::class, [
-                'choices' => Resume::EXP_MAP
+                'choices' => Resume::EXP_TEXT_MAP
             ])
             ->add('tagsText', TextType::class, [
             ])

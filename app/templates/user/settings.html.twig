@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Настройки{% endblock %}
-{# todo: move js to assets, mb it fixes jquery (import $ from 'jquery') #}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('settings') }}
+{% endblock %}
 {% block body %}
     <h1>Настройки аккаунта</h1>
 
@@ -24,43 +27,18 @@
                     </label>
                 </div>
                 <br>
-                <button class="btn btn-danger account-delete" data-user-id="{{ user.id }}">Удалить аккаунт</button>
+                <button class="btn btn-danger account-delete" data-user-id="{{ user.id }}" data-url-index="{{ path('index') }}"
+                        data-url="{{ path('delete-user') }}" data-csrf="{{ csrf_token('authenticate') }}">
+                    Удалить аккаунт
+                </button>
             </div>
             <div class="col-lg-6">
                 <div class="form-group">
                     <b>Пароль:</b>
-                    <button class="btn btn-danger password-change">Изменить</button>
+                    <button class="btn btn-danger password-change" data-url="{{ path('password-change') }}">Изменить
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block custom_js %}
-    <script>
-        $('.account-delete').on('click', function (e) {
-            e.preventDefault();
-            let userId = $(this).data('user-id');
-            if (!confirm('Вы уверены, что хотите удалить аккаунт?')) return;
-            $.ajax({
-                url: "{{ path('delete-user') }}",
-                method: 'POST',
-                dataType: 'json',
-                data: {'userId': userId, '_csrf_token': "{{ csrf_token('authenticate') }}"},
-                success: function () {
-                    alert('Аккаунт успешно удален');
-                    window.location.href = "{{ path('index') }}";
-                },
-                error: function(response) {
-                    alert('Ошибка удаления аккаунта');
-                    window.reload();
-                }
-            });
-        });
-
-        $('.password-change').on('click', function (e) {
-            e.preventDefault();
-            window.location.href = "{{ path('password-change') }}";
-        });
-    </script>
 {% endblock %}

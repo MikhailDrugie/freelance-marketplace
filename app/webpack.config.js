@@ -22,6 +22,7 @@ Encore
      */
     //.addEntry('jquery', 'jquery')
     .addEntry('app', './assets/app.js')
+    .addEntry('settings', './assets/js/settings.js')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 

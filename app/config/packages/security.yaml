@@ -10,6 +10,9 @@ security:
                 class: App\Entity\User
                 property: login
     firewalls:
+        secured_area:
+            http_basic: ~
+            pattern: ^/admin
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -36,7 +39,7 @@ security:
     access_control:
 #        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/market, roles: ROLE_USER }
         - { path: ^/profile/resume, roles: ROLE_FREELANCER }

@@ -21,7 +21,7 @@ class Resume extends BaseEntity
     const EXP_ONE_TO_THREE = 3;
     const EXP_THREE_TO_FIVE = 4;
     const EXP_SIX_AND_MORE = 5;
-    const EXP_MAP = [
+    const EXP_TEXT_MAP = [
         'Не указано' => self::EXP_NOT_MATTER,
         'Без опыта' => self::EXP_NONE,
         'Меньше года' => self::EXP_LESS_THAN_ONE,
@@ -32,6 +32,7 @@ class Resume extends BaseEntity
 
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 2;
+    const STATUS_DELETED = 3;
 
 
     #[ORM\Id]

@@ -9,7 +9,6 @@
         {% endblock %}
         {% block custom_css %}{% endblock %}
         {% block javascripts %}
-{#            {{ encore_entry_script_tags('jquery') }}#}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
@@ -19,6 +18,5 @@
                 {% block body %}{% endblock %}
             </div>
         </div>
-        {% block custom_js %}{% endblock %}
     </body>
 </html>
