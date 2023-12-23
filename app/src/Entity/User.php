@@ -142,6 +142,15 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
         return $this->status;
     }
 
+    public function getStatusText(): string
+    {
+        return match ($this->status) {
+            self::STATUS_ACTIVE => 'Активен',
+            self::STATUS_DELETED => 'Удален',
+            default => 'Неизвестно',
+        };
+    }
+
     public function setStatus(int $status): static
     {
         $this->status = $status;
@@ -227,5 +236,13 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     public function getSalt(): ?string
     {
         return null;
+    }
+
+    public function getProfiles(): string
+    {
+        $profiles = [];
+        if ($this->freelancer) $profiles[] = 'Фрилансер';
+        if ($this->employer) $profiles[] = 'Заказчик';
+        return !empty($profiles) ? implode(' + ', $profiles) : '-';
     }
 }

@@ -78,4 +78,18 @@ class UserService extends AbstractService
     {
         return $this->repository->find($id);
     }
+
+    public function deleteUser(int $id): bool
+    {
+        $user = $this->getUser($id);
+        $user->setStatus(User::STATUS_DELETED);
+        $user->eraseCredentials();
+        try {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

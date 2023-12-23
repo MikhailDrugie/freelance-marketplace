@@ -1,0 +1,12 @@
+<tr id="tr_{{ entity.Id }}">
+    <td></td>
+    <td>{{ entity.Id }}</td>
+    <td>{{ entity.Login }}</td>
+    <td>{{ entity.Email }}</td>
+    <td>{{ entity.FullName }}</td>
+    <td>{{ entity.StatusText }}</td>
+    <td>{{ entity.UserGroup.Label }}</td>
+    <td>{{ entity.Profiles }}</td>
+    <td>{{ entity.CreatedAt.format('d.m.Y H:i:s') }}</td>
+    <td><a href="{{ path('user-edit', {id: entity.Id}) }}">Ред.</a></td>
+</tr>

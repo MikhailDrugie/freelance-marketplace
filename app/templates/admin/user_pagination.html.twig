@@ -1,0 +1,23 @@
+{% extends 'pagination.html.twig' %}
+
+{% block columns %}
+    <td></td>
+    <td><b>#</b></td>
+    <td><b>Логин</b></td>
+    <td><b>Email</b></td>
+    <td><b>Имя</b></td>
+    <td><b>Статус</b></td>
+    <td><b>Группа</b></td>
+    <td><b>Тип профиля</b></td>
+    <td><b>Время создания</b></td>
+{% endblock %}
+
+{% block route_next %}
+    {{ path('user-list', {login: login, status: status, page: pagination.CurrentPageNumber+1}) }}
+{% endblock %}
+
+{% block route_prev %}
+    {{ path('user-list', {login: login, status: status, page: pagination.CurrentPageNumber-1}) }}
+{% endblock %}
+
+

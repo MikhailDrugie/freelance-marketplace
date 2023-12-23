@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}{{ 'Пользователь' ~ entity.Login }}{% endblock %}
+{% block body %}
+    <form method="post">
+        {{ form_errors(userForm) }}
+        <div class="row d-flex flex-column align-items-center">
+            <div class="col-lg-5">
+                <h1 class="h3 mb-3 font-weight-normal">{{ 'Пользователь' ~ entity.Login }}</h1>
+            </div>
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                        {{ form_start(userForm) }}
+                        {{ form_row(userForm.login, {
+                            label: 'Логин'
+                        }) }}
+                        {{ form_row(userForm.email, {
+                            label: 'Email'
+                        }) }}
+                        {{ form_row(userForm.full_name, {
+                            label: 'Имя'
+                        }) }}
+                        {{ form_row(userForm.status, {
+                            label: 'Статус'
+                        }) }}
+                        {{ form_row(userForm.userGroup, {
+                            label: 'Группа'
+                        }) }}
+                        {{ form_row(userForm.freelancer, {
+                            label: 'Фрилансер'
+                        }) }}
+                        {{ form_row(userForm.employer, {
+                            label: 'Заказчик'
+                        }) }}
+                        {{ form_end(userForm) }}
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-lg-5">
+                <button class="btn btn-lg btn-success" type="submit">
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

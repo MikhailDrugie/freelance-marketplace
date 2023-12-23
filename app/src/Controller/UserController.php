@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\PasswordChangePasswordChangeFormType;
 use App\Form\RegistrationFormType;
 use App\Service\UserService;
+use Doctrine\DBAL\Exception\ServerException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -109,7 +110,15 @@ class UserController extends BaseController
     #[Route('/ajax/delete-user', name: 'delete-user')]
     public function deleteUser(Request $request): Response
     {
-        throw new AccessDeniedException('WIP');
-        return $this->json(['status' => 'WIP']);
+        if (!$request->isXmlHttpRequest()) throw new AccessDeniedException();
+
+        $userId = $request->get('userId');
+        if (!$this->getUser() || $this->getUser()->getId() != $userId) throw new AccessDeniedException();
+
+        if (!$this->service->deleteUser($userId)) throw new \HttpException(message: "Ошибка удаления пользователя", code: 500);
+
+        return $this->json([
+            'status' => 'success'
+        ]);
     }
 }
